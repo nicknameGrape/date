@@ -1,7 +1,7 @@
 //requirejs(["fitText", "fitImage", "HatDraw", "Loader"], function (fitText, fitImage, HatDraw, Loader) {
-import fitText from "../modules/fitText.mjs";
-import fitImage from "../modules/fitImage.mjs";
-import HatDraw from "../modules/HatDraw.mjs";
+import fitText from "./js_modules/fitText.mjs";
+import fitImage from "./js_modules/fitImage.mjs";
+import HatDraw from "./js_modules/HatDraw.mjs";
 
 function resizeHandler(event) {
 	canvas.width = window.innerWidth;
