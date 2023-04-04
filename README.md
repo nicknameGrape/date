@@ -1,2 +1,2 @@
 # date
-`date.html` displays the current date and time with Japanese translations
+displays the current date and time with Japanese translations
