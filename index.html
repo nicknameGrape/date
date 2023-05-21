@@ -7,11 +7,7 @@ body {
 	margin: 0;
 	touch-action: none;
 	font-family: sans-serif;
-	font-size: 5vh;
-}
-canvas {
-	width: 100%;
-	height: 100%;
+	background: skyBlue;
 }
 #hub {
 	height: 20%;
@@ -22,24 +18,170 @@ canvas {
 	text-align: center;
 	background: skyBlue;
 	position: absolute;
+	font-size: 5vh;
+}
+
+#grass {
+	width: 100%;
+	height: 30%;
+	position: absolute;
+	bottom: 0;
+	background: green;
+	z-index: -1;
+}
+
+#wrapper {
+	width: 100%;
+	height: 70%;
+	display: grid;
+	grid-template-areas:
+		"time time time"
+		"dayE dateE year"
+		"dayJ dateJ ."
+		"weatherButtons weatherCanvas seasonE"
+		"weatherButtons weatherCanvas seasonJ";
+	justify-content: center;
+	column-gap: 4vw;
+}
+
+.english {
+	display: flex;
+	justify-content: center;
+	align-items: end;
+	font-size: 10vh;
+	font-weight: bold;
+	text-shadow: black .3vh .3vh;
+}
+.japanese {
+	display: flex;
+	align-items: start;
+	justify-content: center;
+	font-size: 6vh;
+	text-shadow: black .2vh .2vh;
+}
+#time {
+	display: flex;
+	justify-content: center;
+	color: purple;
+	grid-area: time;
+}
+#dayE {
+	color: yellow;
+	grid-area: dayE;
+}
+#dayJ {
+	color: yellow;
+	grid-area: dayJ;
+}
+#dateE {
+	color: blue;
+	grid-area: dateE;
+}
+#dateJ {
+	color: blue;
+	grid-area: dateJ;
+}
+#year {
+	color: red;
+	grid-area: year;
+	justify-self: start;
+}
+#seasonE {
+	color: green;
+	grid-area: seasonE;
+}
+#seasonJ {
+	color: green;
+	grid-area: seasonJ;
+}
+#weatherButtons {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-area: weatherButtons;
+	padding: 30% 0;
+	gap: 1vh;
+}
+input {
+	height: 100%;
+	display: none;
+}
+input:checked + label {
+	box-sizing: border-box;
+	border: solid white;
+	border-radius: 1vh;
+}
+label {
+	display: flex;
+	align-items: center;
+	box-sizing: border-box;
+	border: solid transparent;
+	justify-content: center;
+	height: 100%;
+	text-shadow: none;
+	font-size: 3vh;
+	user-select: none;
+}
+#weatherCanvas {
+	width: 30vw;
+	height: 45vh;
+	grid-area: weatherCanvas;
+	object-fit: contain;
 }
 	</style>
+	<script async src="date.format.js"></script>
+	<script async src="main.mjs" type="module"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-C5MPB2T6KH"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'G-C5MPB2T6KH');
+	</script>
+	<script async src="textFit/textFit.min.js"></script>
 </head>
 <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-C5MPB2T6KH"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-C5MPB2T6KH');
-</script>
 <body>
-<a id="hub" href="https://nicknameGrape.github.io/smartboard/">
-	<div>Back to<br>Hub</div>
-</a>
-<canvas width=800 height=450 id="myCanvas"></canvas>
-<script src="date.format.js"></script>
-<script type="module" src="main.mjs"></script>
+	<a id="hub" href="https://nicknameGrape.github.io/smartboard/">
+		<div>Back to<br>Hub</div>
+	</a>
+	<div id="grass"></div>
+	<div id="wrapper">
+		<div id="time" class="english">Current Time</div>
+		<div id="dayE" class="english">Day of the Week</div>
+		<div id="dayJ" class="japanese">Day of the Week</div>
+		<div id="dateE" class="english">Date</div>
+		<div id="dateJ" class="japanese">Date</div>
+		<div id="year" class="english">Year</div>
+		<div id="weatherButtons" class="english">
+			<input type="checkbox" id="sunny">
+				<label for="sunny">sunny</label>
+			</input>
+			<input type="checkbox" id="cloudy">
+				<label for="cloudy">cloudy</label>
+			</input>
+			<input type="checkbox" id="rainy">
+				<label for="rainy">rainy</label>
+			</input>
+			<input type="checkbox" id="snowy">
+				<label for="snowy">snowy</label>
+			</input>
+			<input type="checkbox" id="windy">
+				<label for="windy">windy</label>
+			</input>
+			<input type="checkbox" id="stormy">
+				<label for="stormy">stormy</label>
+			</input>
+			<input type="checkbox" id="hot">
+				<label for="hot">hot</label>
+			</input>
+			<input type="checkbox" id="cold">
+				<label for="cold">cold</label>
+			</input>
+		</div>
+		<canvas id="weatherCanvas"></canvas>
+		<div id="seasonE" class="english">Season</div>
+		<div id="seasonJ" class="japanese">Season</div>
+	</div>
 </body>
 </html>
