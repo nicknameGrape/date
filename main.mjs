@@ -16,6 +16,14 @@ function drawDate() {
 	divYear.innerHTML = year;
 	divSeasonE.innerHTML = season;
 	divSeasonJ.innerHTML = TRANSLATIONS[season];
+	sunny.nextElementSibling.innerHTML = "sunny";
+	cloudy.nextElementSibling.innerHTML = "cloudy";
+	rainy.nextElementSibling.innerHTML = "rainy";
+	snowy.nextElementSibling.innerHTML = "snowy";
+	windy.nextElementSibling.innerHTML = "windy";
+	stormy.nextElementSibling.innerHTML = "stormy";
+	hot.nextElementSibling.innerHTML = "hot";
+	cold.nextElementSibling.innerHTML = "cold";
 	context.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
 	if (sunny.checked) {
 		fitImage(context, weather.sunny.img);
@@ -47,6 +55,13 @@ function drawDate() {
 	if (rainy.checked) {
 		fitImage(context, weather.rainy.img);
 	}
+}
+
+function updateTime() {
+	today = Date.now();
+	time = dateFormat(today, "h:MM TT");
+	//dateFormat(today, "h:MM TT, dddd, mmmm dS, yyyy");
+	divTime.innerHTML = time;
 }
 
 function resizeHandler(event) {
@@ -112,6 +127,7 @@ let dateString = dateFormat(today, "dS");
 let year = dateFormat(today, "yyyy");
 let monthNumber = parseInt(dateFormat(today, "m"));
 let season;
+let divWrapper = document.getElementById("wrapper");
 let divTime = document.getElementById("time");
 let divDayE = document.getElementById("dayE");
 let divDayJ = document.getElementById("dayJ");
@@ -180,4 +196,6 @@ cold.addEventListener("change", drawDate, false);
 
 resizeHandler();
 drawDate()
-//setInterval(function () {drawDate();}, 1000);
+divWrapper.style.display = "grid";
+divWrapper.classList.add("start");
+setInterval(function () {updateTime();}, 200);

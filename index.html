@@ -33,7 +33,7 @@ body {
 #wrapper {
 	width: 100%;
 	height: 70%;
-	display: grid;
+	display: none;
 	grid-template-areas:
 		"time time time"
 		"dayE dateE year"
@@ -42,6 +42,15 @@ body {
 		"weatherButtons weatherCanvas seasonJ";
 	justify-content: center;
 	column-gap: 4vw;
+}
+
+.start {
+	animation: fadein .5s;
+}
+
+@keyframes fadein {
+	from { opacity: 0; }
+	to   { opacity: 1; }
 }
 
 .english {
@@ -108,13 +117,15 @@ input {
 input:checked + label {
 	box-sizing: border-box;
 	border: solid white;
-	border-radius: 1vh;
+	border-radius: 2vh;
+	background: white;
 }
 label {
 	display: flex;
 	align-items: center;
 	box-sizing: border-box;
-	border: solid transparent;
+	border: solid white;
+	border-radius: 2vh;
 	justify-content: center;
 	height: 100%;
 	text-shadow: none;
@@ -147,41 +158,41 @@ label {
 	</a>
 	<div id="grass"></div>
 	<div id="wrapper">
-		<div id="time" class="english">Current Time</div>
-		<div id="dayE" class="english">Day of the Week</div>
-		<div id="dayJ" class="japanese">Day of the Week</div>
-		<div id="dateE" class="english">Date</div>
-		<div id="dateJ" class="japanese">Date</div>
-		<div id="year" class="english">Year</div>
+		<div id="time" class="english"></div>
+		<div id="dayE" class="english"></div>
+		<div id="dayJ" class="japanese"></div>
+		<div id="dateE" class="english"></div>
+		<div id="dateJ" class="japanese"></div>
+		<div id="year" class="english"></div>
 		<div id="weatherButtons" class="english">
 			<input type="checkbox" id="sunny">
-				<label for="sunny">sunny</label>
+				<label for="sunny"></label>
 			</input>
 			<input type="checkbox" id="cloudy">
-				<label for="cloudy">cloudy</label>
+				<label for="cloudy"></label>
 			</input>
 			<input type="checkbox" id="rainy">
-				<label for="rainy">rainy</label>
+				<label for="rainy"></label>
 			</input>
 			<input type="checkbox" id="snowy">
-				<label for="snowy">snowy</label>
+				<label for="snowy"></label>
 			</input>
 			<input type="checkbox" id="windy">
-				<label for="windy">windy</label>
+				<label for="windy"></label>
 			</input>
 			<input type="checkbox" id="stormy">
-				<label for="stormy">stormy</label>
+				<label for="stormy"></label>
 			</input>
 			<input type="checkbox" id="hot">
-				<label for="hot">hot</label>
+				<label for="hot"></label>
 			</input>
 			<input type="checkbox" id="cold">
-				<label for="cold">cold</label>
+				<label for="cold"></label>
 			</input>
 		</div>
 		<canvas id="weatherCanvas"></canvas>
-		<div id="seasonE" class="english">Season</div>
-		<div id="seasonJ" class="japanese">Season</div>
+		<div id="seasonE" class="english"></div>
+		<div id="seasonJ" class="japanese"></div>
 	</div>
 </body>
 </html>
