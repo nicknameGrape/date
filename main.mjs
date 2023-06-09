@@ -4,6 +4,22 @@ import fitImage from "./js_modules/fitImage.mjs";
 import HatDraw from "./js_modules/HatDraw.mjs";
 import Loader from "./js_modules/Loader.mjs";
 
+function setup() {
+	weatherState = JSON.parse(localStorage.getItem("weatherState"));
+	Object.entries(weatherState).forEach(function (ent) {
+		let id = ent[0];
+		let state = ent[1];
+		let cb = checkBoxes.find(function (cb) {
+			return cb.id === id;
+		});
+		console.log(id, state, cb);
+		cb.checked = state;
+		cb.nextElementSibling.innerHTML = id;
+	});
+	resizeHandler();
+	drawDate()
+}
+
 function drawDate() {
 	today = Date.now();
 	time = dateFormat(today, "h:MM TT");
@@ -11,48 +27,44 @@ function drawDate() {
 	divTime.innerHTML = time;
 	divDayE.innerHTML = day;
 	divDayJ.innerHTML = TRANSLATIONS[day];
-	divDateE.innerHTML = "<span>"+month+" <span>"+dateString.slice(0,2)+"<sup>"+dateString.slice(2,4)+"</sup></span></span>";
+	let splitAt = dateString.length - 2;
+	divDateE.innerHTML = "<span>"+month+" <span>"+dateString.slice(0,splitAt)+"<sup>"+dateString.slice(splitAt)+"</sup></span></span>";
 	divDateJ.innerHTML = TRANSLATIONS[month]+dateNumber+"日";
 	divYear.innerHTML = year;
 	divSeasonE.innerHTML = season;
 	divSeasonJ.innerHTML = TRANSLATIONS[season];
-	sunny.nextElementSibling.innerHTML = "sunny";
-	cloudy.nextElementSibling.innerHTML = "cloudy";
-	rainy.nextElementSibling.innerHTML = "rainy";
-	snowy.nextElementSibling.innerHTML = "snowy";
-	windy.nextElementSibling.innerHTML = "windy";
-	stormy.nextElementSibling.innerHTML = "stormy";
-	hot.nextElementSibling.innerHTML = "hot";
-	cold.nextElementSibling.innerHTML = "cold";
+}
+
+function drawWeather() {
 	context.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
-	if (sunny.checked) {
+	if (weatherState.sunny) {
 		fitImage(context, weather.sunny.img);
 	}
-	if (cloudy.checked) {
+	if (weatherState.cloudy) {
 		fitImage(context, weather.cloudy.img);
 	}
-	if (rainy.checked) {
+	if (weatherState.rainy) {
 		fitImage(context, weather.cloudy.img);
 		fitImage(context, weather.rainy.img);
 	}
-	if (stormy.checked) {
-		fitImage(context, weather.stormy.img);
-		fitImage(context, weather.cloudy.img);
-	}
-	if (windy.checked) {
-		fitImage(context, weather.windy.img);
-	}
-	if (hot.checked) {
-		fitImage(context, weather.hot.img);
-	}
-	if (cold.checked) {
-		fitImage(context, weather.cold.img);
-	}
-	if (snowy.checked) {
+	if (weatherState.snowy) {
 		fitImage(context, weather.cloudy.img);
 		fitImage(context, weather.snowy.img);
 	}
-	if (rainy.checked) {
+	if (weatherState.stormy) {
+		fitImage(context, weather.stormy.img);
+		fitImage(context, weather.cloudy.img);
+	}
+	if (weatherState.windy) {
+		fitImage(context, weather.windy.img);
+	}
+	if (weatherState.hot) {
+		fitImage(context, weather.hot.img);
+	}
+	if (weatherState.cold) {
+		fitImage(context, weather.cold.img);
+	}
+	if (weatherState.rainy) {
 		fitImage(context, weather.rainy.img);
 	}
 }
@@ -68,16 +80,18 @@ function resizeHandler(event) {
 	//context.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
 	weatherCanvas.width = .3*window.innerWidth;
 	weatherCanvas.height = .6*window.innerHeight;
-	//fitImage(context, weather.sunny.img, "s");
-	//fitImage(context, weather.cloudy.img);
-	//fitImage(context, weather.rainy.img);
-	//fitImage(context, weather.stormy.img);
-	//fitImage(context, weather.windy.img);
-	//fitImage(context, weather.hot.img, "s");
-	//fitImage(context, weather.cold.img, "s");
-	//fitImage(context, weather.snowy.img);
-	//fitImage(context, weather.rainy.img);
 	drawDate();
+	drawWeather();
+}
+
+function weatherChangeHandler(ev) {
+	if (ev.target.checked) {
+		weatherState[ev.target.id] = true;
+	} else {
+		weatherState[ev.target.id] = false;
+	}
+	localStorage.setItem("weatherState", JSON.stringify(weatherState));
+	drawWeather();
 }
 
 const TRANSLATIONS = {
@@ -136,18 +150,30 @@ let divDateJ = document.getElementById("dateJ");
 let divYear = document.getElementById("year");
 let divSeasonE = document.getElementById("seasonE");
 let divSeasonJ = document.getElementById("seasonJ");
-let cbSunny = document.getElementById("sunny");
-let cbCloudy = document.getElementById("cloudy");
-let cbRainy = document.getElementById("rainy");
-let cbSnowy = document.getElementById("snowy");
-let cbWindy = document.getElementById("windy");
-let cbStormy = document.getElementById("stormy");
-let cbHot = document.getElementById("hot");
-let cbCold = document.getElementById("cold");
+//let cbSunny = document.getElementById("sunny");
+//let cbCloudy = document.getElementById("cloudy");
+//let cbRainy = document.getElementById("rainy");
+//let cbSnowy = document.getElementById("snowy");
+//let cbWindy = document.getElementById("windy");
+//let cbStormy = document.getElementById("stormy");
+//let cbHot = document.getElementById("hot");
+//let cbCold = document.getElementById("cold");
+let checkBoxes = Array.from(document.getElementsByTagName("input"));
+console.log(checkBoxes);
 let weatherCanvas = document.getElementById("weatherCanvas");
 let context = weatherCanvas.getContext("2d");
 let loader = new Loader("images/");
 let weather = {};
+let weatherState = {
+	"sunny": false,
+	"rainy": false,
+	"cloudy": false,
+	"snowy": false,
+	"windy": false,
+	"stormy": false,
+	"hot": false,
+	"cold": false
+};
 
 if (
 	monthNumber === 12 ||
@@ -185,17 +211,19 @@ Object.entries(ASSETS).forEach(function (pair) {
 });
 
 window.addEventListener("resize", resizeHandler, false);
-sunny.addEventListener("change", drawDate, false);
-cloudy.addEventListener("change", drawDate, false);
-rainy.addEventListener("change", drawDate, false);
-snowy.addEventListener("change", drawDate, false);
-windy.addEventListener("change", drawDate, false);
-stormy.addEventListener("change", drawDate, false);
-hot.addEventListener("change", drawDate, false);
-cold.addEventListener("change", drawDate, false);
+//cbSunny.addEventListener("change", weatherChangeHandler, false);
+//cbCloudy.addEventListener("change", weatherChangeHandler, false);
+//cbRainy.addEventListener("change", weatherChangeHandler, false);
+//cbSnowy.addEventListener("change", weatherChangeHandler, false);
+//cbWindy.addEventListener("change", weatherChangeHandler, false);
+//cbStormy.addEventListener("change", weatherChangeHandler, false);
+//cbHot.addEventListener("change", weatherChangeHandler, false);
+//cbCold.addEventListener("change", weatherChangeHandler, false);
+checkBoxes.forEach(function (cb) {
+	cb.addEventListener("change", weatherChangeHandler, false);
+});
 
-resizeHandler();
-drawDate()
+setup();
 divWrapper.style.display = "grid";
 divWrapper.classList.add("start");
 setInterval(function () {updateTime();}, 200);
