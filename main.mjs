@@ -5,7 +5,9 @@ import HatDraw from "./js_modules/HatDraw.mjs";
 import Loader from "./js_modules/Loader.mjs";
 
 function setup() {
-	weatherState = JSON.parse(localStorage.getItem("weatherState"));
+	if (localStorage.getItem("weatherState") !== null) {
+		weatherState = JSON.parse(localStorage.getItem("weatherState"));
+	}
 	Object.entries(weatherState).forEach(function (ent) {
 		let id = ent[0];
 		let state = ent[1];
