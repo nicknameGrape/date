@@ -18,6 +18,13 @@ function setup() {
 		cb.checked = state;
 		cb.nextElementSibling.innerHTML = id;
 	});
+	divSnow.style.opacity = 0;
+	if (weatherState.snowy) {
+		snowOpacityTarget = 1;
+		animationLoopSnow();
+	} else {
+		snowOpacityTarget = 0;
+	}
 	resizeHandler();
 	drawDate()
 }
@@ -50,7 +57,7 @@ function drawWeather() {
 		fitImage(context, weather.rainy.img);
 	}
 	if (weatherState.snowy) {
-		fitImage(context, weather.cloudy.img);
+		//fitImage(context, weather.cloudy.img);
 		fitImage(context, weather.snowy.img);
 	}
 	if (weatherState.stormy) {
@@ -92,8 +99,42 @@ function weatherChangeHandler(ev) {
 	} else {
 		weatherState[ev.target.id] = false;
 	}
+	if (ev.target.id === "snowy") {
+		if (ev.target.checked) {
+			snowOpacityTarget = 1;
+		} else {
+			snowOpacityTarget = 0;
+		}
+		if (animationLastTime === null) {
+			requestAnimationFrame(animationLoopSnow);
+		}
+	}
 	localStorage.setItem("weatherState", JSON.stringify(weatherState));
 	drawWeather();
+}
+
+function animationLoopSnow() {
+	const opacityChangeSpeedInSeconds = 1;
+	let now = performance.now();
+	if (animationLastTime === null) {
+		animationLastTime = now;
+	}
+	let elapsed = now - animationLastTime;
+	let divSnowOpacity = parseFloat(divSnow.style.opacity);
+	//console.log("STYLE", divSnowOpacity);
+	let sign = Math.sign(snowOpacityTarget - divSnowOpacity);
+	divSnow.style.opacity = divSnowOpacity+sign*opacityChangeSpeedInSeconds/1000*elapsed;
+	console.log(elapsed, divSnow.style.opacity);
+	animationLastTime = now;
+	if (divSnow.style.opacity < 0) {
+		divSnow.style.opacity = 0;
+		animationLastTime = null;
+	} else if (divSnow.style.opacity > 1) {
+		divSnow.style.opacity = 1;
+		animationLastTime = null;
+	} else {
+		requestAnimationFrame(animationLoopSnow);
+	}
 }
 
 const TRANSLATIONS = {
@@ -152,6 +193,7 @@ let divDateJ = document.getElementById("dateJ");
 let divYear = document.getElementById("year");
 let divSeasonE = document.getElementById("seasonE");
 let divSeasonJ = document.getElementById("seasonJ");
+let divSnow = document.getElementById("snow");
 //let cbSunny = document.getElementById("sunny");
 //let cbCloudy = document.getElementById("cloudy");
 //let cbRainy = document.getElementById("rainy");
@@ -176,6 +218,8 @@ let weatherState = {
 	"hot": false,
 	"cold": false
 };
+let snowOpacityTarget = null;
+let animationLastTime = null;
 
 if (
 	monthNumber === 12 ||
